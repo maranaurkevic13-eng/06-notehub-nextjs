@@ -8,6 +8,7 @@ import { createNote } from "../../lib/api";
 interface NoteFormProps {  
   onClose: () => void
 }
+
 export default function NoteForm({ onClose }: NoteFormProps) {
   const queryClient = useQueryClient();
   const createMutation = useMutation({
@@ -27,9 +28,11 @@ export default function NoteForm({ onClose }: NoteFormProps) {
           .oneOf(["Todo", "Work", "Personal", "Meeting", "Shopping"])
           .required("Tag is required"),
       })}
-      onSubmit={(values, { resetForm }) => {
-        createMutation.mutate(values)
-        resetForm();  
+      onSubmit={(values, {resetForm}) => {
+        createMutation.mutate(values, {
+         onSuccess: () => {resetForm}
+        })
+          
       }}
     >
      <Form className={css.form}>
