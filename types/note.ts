@@ -3,13 +3,14 @@ export interface Note {
     title: string,
     content: string,
     tag: NoteTag,
-    createdAt?: string;
-    updatedAt?: string;
-}
+    createdAt: string;
+    updatedAt: string;
+}    
 
-export interface FetchNotesResponse {
-  notes: Note[];
-  totalPages: number;
+export interface FormValues {
+  title: string;
+  content: string;
+  tag: NoteTag;
 }
 
 export type NoteTag = "Todo" | "Work" | "Personal" | "Meeting" | "Shopping";
