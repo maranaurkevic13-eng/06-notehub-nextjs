@@ -1,47 +1,45 @@
 import axios from "axios";
-import type { Note } from "../types/note";   
-import { NoteTag } from "../types/note";
+import type { Note, FormValues } from "@/types/note";
 
-const API_URL = 'https://notehub-public.goit.study/api/notes'
+const API_URL = "https://notehub-public.goit.study/api/notes";
 const token = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
 
 const headers = {
-    Authorization: `Bearer ${token}`,
+  Authorization: `Bearer ${token}`,
 };
-        
+
 export interface FetchNotesResponse {
   notes: Note[];
   totalPages: number;
 }
 
-interface NotePayload {
-  title: string;
-  content?: string;
-  tag: NoteTag;
+
+export async function fetchNotes(
+  page: number,
+  perPage: number = 10, 
+  search?: string
+): Promise<FetchNotesResponse> {
+  const res = await axios.get<FetchNotesResponse>(API_URL, {
+    headers,
+    params: { page, perPage, search },
+  });
+  return res.data;
 }
 
-export const fetchNotes = async (
-    page: number,
-    perPage: number,
-    search?: string): Promise<FetchNotesResponse>=> {
-    const res = await axios.get<FetchNotesResponse>(API_URL, {
-        headers,
-        params: {page, perPage, search}
-    })
-        return res.data
+
+export async function createNote(values: FormValues): Promise<Note> {
+  const res = await axios.post<Note>(API_URL, values, { headers }); 
+  return res.data;
 }
 
-export const createNote = async (payload: NotePayload): Promise<Note> => {
-    const { data } = await axios.post<Note>('/notes', payload);
-    return data;
+
+export async function deleteNote(id: string): Promise<Note> {
+  const res = await axios.delete<Note>(`${API_URL}/${id}`, { headers });
+  return res.data;
 }
 
-export const deleteNote = async (id: string): Promise<Note> => {
-    const res = await axios.delete<Note>(`${API_URL}/${id}`, {headers});
-    return res.data;
-}
 
-export const fetchNoteById = async (id: string): Promise<Note> => {
+export async function fetchNoteById(id: string): Promise<Note> {
   const res = await axios.get<Note>(`${API_URL}/${id}`, { headers });
   return res.data;
 }
